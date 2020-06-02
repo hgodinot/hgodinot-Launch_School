@@ -1,0 +1,1 @@
+(1..10).each { |idx| puts "#{" " * idx} The Flinstones Rock!" }
