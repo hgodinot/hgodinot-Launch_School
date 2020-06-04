@@ -1,5 +1,3 @@
-require "pry"
-
 MOVES = %w(rock paper scissors)
 
 class Move
