@@ -10,7 +10,7 @@ def welcome_message
   puts "Welcome to Tic, Tac Toe!"
 end
 
-def select_first_to_play(first_player)
+def select_first_to_play
   choice = nil
 
   loop do
@@ -22,34 +22,35 @@ def select_first_to_play(first_player)
   end
 
   case choice
-  when "1" then first_player[0] = PLAYERS[0]
-  when "2" then first_player[0] = PLAYERS[1]
-  when "3" then first_player[0] = PLAYERS.sample
+  when "1" then return PLAYERS[0]
+  when "2" then return PLAYERS[1]
+  else          return PLAYERS.sample
   end
 end
 
 # rubocop:disable Metrics/AbcSize
 def board_display(brd)
   puts "\n TIC   TAC   TOE  "
-  puts "\n.....|.....|....."
-  puts   "..#{brd[1]}..|..#{brd[2]}..|..#{brd[3]}.."
-  puts   ".....|.....|....."
+  puts "\n     |     |"
+  puts   "  #{brd[1]}  |  #{brd[2]}  |  #{brd[3]}  "
+  puts   "     |     |"
   puts   "-----+-----+-----"
-  puts   ".....|.....|....."
-  puts   "..#{brd[4]}..|..#{brd[5]}..|..#{brd[6]}.."
-  puts   ".....|.....|....."
+  puts   "     |     |"
+  puts   "  #{brd[4]}  |  #{brd[5]}  |  #{brd[6]}  "
+  puts   "     |     |"
   puts   "-----+-----+-----"
-  puts   ".....|.....|....."
-  puts   "..#{brd[7]}..|..#{brd[8]}..|..#{brd[9]}.."
-  puts   ".....|.....|....."
+  puts   "     |     |"
+  puts   "  #{brd[7]}  |  #{brd[8]}  |  #{brd[9]}  "
+  puts   "     |     |"
   puts   "\nYou are #{HUMAN_MARKER}. Computer is #{COMPUTER_MARKER}."
 end
 
 def prepare_board(brd)
   (1..9).each { |key| brd[key] = NEUTRAL_MARKER }
+  brd
 end
 
-def empty(brd)
+def empty_boxes(brd)
   brd.select { |_, v| v == NEUTRAL_MARKER }.keys
 end
 
@@ -66,82 +67,84 @@ def joinor(arr, join)
 end
 
 def place_piece(brd, player)
-  if player[0] == :human
-    player[0] = :computer
-    human_plays(brd)
-  else
-    player[0] = :human
-    computer_plays(brd)
-  end
+  # rubocop:disable Style/ConditionalAssignment
+  player == :human ? human_plays(brd) : computer_plays(brd)
+end
+
+def alternate_player(player)
+  player == :human ? :computer : :human
 end
 
 def human_plays(brd)
   choice = nil
 
   loop do
-    puts"\nChoose a position to place a piece: #{joinor(empty(brd), ',')}"
+    puts"\nChoose a position to place a piece: #{joinor(empty_boxes(brd), ',')}"
     choice = gets.chomp.to_i
-    break if empty(brd).include?(choice)
+    break if empty_boxes(brd).include?(choice)
     puts "\nSorry, incorrect choice."
   end
 
   brd[choice] = HUMAN_MARKER
 end
 
-# rubocop:disable Metrics/CyclomaticComplexity
-# rubocop:disable Metrics/MethodLength
-# rubocop:disable Metrics/PerceivedComplexity
-# I know that this method is quite complex, but it's the most efficient way I
-# found to detect the dangers/opportunities and reacting to them. Doing it in
-# two different method would ask for more computation and lines.
 def computer_plays(brd)
-  choice = nil
+  choice = [nil]
 
+  if attack_opportunity?(brd, choice)
+  elsif threat?(brd, choice)
+  else
+    # rubocop:disable Metrics/LineLength
+    brd[5] == NEUTRAL_MARKER ? choice[0] = 5 : choice[0] = empty_boxes(brd).sample
+  end
+
+  brd[choice[0]] = COMPUTER_MARKER
+  puts "\nComputer chooses #{choice[0]}."
+end
+
+def attack_opportunity?(brd, choice)
   WINNING_LINES.each do |line|
     if (brd[line[0]] + brd[line[1]] + brd[line[2]]).chars.sort.join ==
        NEUTRAL_MARKER + COMPUTER_MARKER * 2
-      # rubocop:disable Metrics/LineLength
-      (0..2).each { |idx| choice = line[idx] if brd[line[idx]] == NEUTRAL_MARKER }
-      break
-    elsif (brd[line[0]] + brd[line[1]] + brd[line[2]]).chars.sort.join ==
-          NEUTRAL_MARKER + HUMAN_MARKER * 2
-      (0..2).each { |idx| choice = line[idx] if brd[line[idx]] == NEUTRAL_MARKER }
-      break
-    end
-  end
-
-  if choice.nil?
-    # rubocop:disable Style/ConditionalAssignment
-    brd[5] == NEUTRAL_MARKER ? choice = 5 : choice = empty(brd).sample
-  end
-
-  brd[choice] = COMPUTER_MARKER
-  puts "\nComputer chooses #{choice}."
-end
-
-def tie?(brd)
-  empty(brd).empty?
-end
-
-def winner?(brd, winner)
-  WINNING_LINES.each do |line|
-    if brd[line[0]] + brd[line[1]] + brd[line[2]] == HUMAN_MARKER * 3
-      winner[0] = "human"
-      return true
-    elsif brd[line[0]] + brd[line[1]] + brd[line[2]] == COMPUTER_MARKER * 3
-      winner[0] = "computer"
+      (0..2).each { |idx| choice[0] = line[idx] if brd[line[idx]] == NEUTRAL_MARKER }
       return true
     end
   end
   false
 end
 
+def threat?(brd, choice)
+  WINNING_LINES.each do |line|
+    if (brd[line[0]] + brd[line[1]] + brd[line[2]]).chars.sort.join ==
+       NEUTRAL_MARKER + HUMAN_MARKER * 2
+      (0..2).each { |idx| choice[0] = line[idx] if brd[line[idx]] == NEUTRAL_MARKER }
+      return true
+    end
+  end
+  false
+end
+
+def tie?(brd)
+  empty_boxes(brd).empty?
+end
+
+def winner?(brd)
+  WINNING_LINES.each do |line|
+    if brd[line[0]] + brd[line[1]] + brd[line[2]] == HUMAN_MARKER * 3
+      return :human
+    elsif brd[line[0]] + brd[line[1]] + brd[line[2]] == COMPUTER_MARKER * 3
+      return :computer
+    end
+  end
+  nil
+end
+
 def display_result(winner, human_computer_scores)
-  case winner[0]
-  when "human"
+  case winner
+  when :human
     human_computer_scores[:human] += 1
     puts "\nCongratulation, you won!"
-  when "computer"
+  when :computer
     human_computer_scores[:computer] += 1
     puts "\nSorry, you lost!"
   else
@@ -183,32 +186,38 @@ def good_bye_message
   puts "\nGood Bye, thanks for playing Tic-Tac-Toe!"
 end
 
-human_computer_scores = { human: 0, computer: 0 }
-
-welcome_message
-
-loop do
+# rubocop:disable Metrics/MethodLength
+def play
+  human_computer_scores = { human: 0, computer: 0 }
   clear_screen
-  board = {}
-  current_player = [nil]
-  winner = [nil]
-  prepare_board(board)
-  select_first_to_play(current_player)
-
+  welcome_message
+  
   loop do
+    winner = nil
+    board = prepare_board({})
+    clear_screen
+    current_player = select_first_to_play
+
+    loop do
+      clear_screen
+      board_display(board)
+      place_piece(board, current_player)
+      winner = winner?(board)
+      break if winner || tie?(board)
+      current_player = alternate_player(current_player)
+    end
+
     board_display(board)
-    place_piece(board, current_player)
-    break if winner?(board, winner) || tie?(board)
+    display_result(winner, human_computer_scores)
+    if five_wins?(human_computer_scores)
+      display_final_winner(human_computer_scores)
+      break
+    else
+      break unless play_again?
+    end
   end
 
-  board_display(board)
-  display_result(winner, human_computer_scores)
-  if five_wins?(human_computer_scores)
-    display_final_winner(human_computer_scores)
-    break
-  else
-    break unless play_again?
-  end
+  good_bye_message
 end
 
-good_bye_message
+play
