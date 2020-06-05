@@ -45,7 +45,8 @@ def board_display(brd)
   puts   "\nYou are #{HUMAN_MARKER}. Computer is #{COMPUTER_MARKER}."
 end
 
-def prepare_board(brd)
+def prepare_board
+  brd = {}
   (1..9).each { |key| brd[key] = NEUTRAL_MARKER }
   brd
 end
@@ -194,7 +195,7 @@ def play
   
   loop do
     winner = nil
-    board = prepare_board({})
+    board = prepare_board
     clear_screen
     current_player = select_first_to_play
 
