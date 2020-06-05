@@ -2,6 +2,7 @@
 SUITS = %w(heart diamond club spade)
 VALUES = %w(2 3 4 5 6 7 8 9 10 jack queen king ace)
 LIMIT = 21
+POINTS_TO_WIN = 5
 
 def clear
   system 'clear'
@@ -12,7 +13,7 @@ def wait
 end
 
 def initialize_deck
-  VALUES.product(SUITS).shuffle
+  SUITS.product(VALUES).shuffle.map { |card| { suit: card[0], value: card[1] } }
 end
 
 def deal_card(hand, deck)
@@ -34,13 +35,13 @@ def deal_reveal_initial_cards(deck, player)
 end
 
 def display_card(card)
-  "#{card[0]} of #{card[1]}.".capitalize
+  "#{card[:value]} of #{card[:suit]}.".capitalize
 end
 
 def display_hand(hand, player)
   puts player == :player ? "\nYour hand is:" : "\nThe dealer hand is:"
   puts ""
-  hand.each { |card| puts "#{card[0]} of #{card[1]}.".capitalize }
+  hand.each { |card| puts "#{card[:value]} of #{card[:suit]}.".capitalize }
   puts "\nHand value: #{hand_value(hand)}"
 end
 
@@ -49,9 +50,9 @@ def hand_value(cards)
   ace = 0
 
   cards.each do |card|
-    if (2..10).cover? card[0].to_i
-      value += card[0].to_i
-    elsif %w(jack queen king).include? card[0]
+    if (2..10).cover? card[:value].to_i
+      value += card[:value].to_i
+    elsif %w(jack queen king).include? card[:value]
       value += 10
     else
       ace += 1
@@ -66,13 +67,13 @@ end
 def player_stop?
   answer = nil
   loop do
-    puts "\nDo you want to draw a new card? (y/n)"
+    puts "\nHit or stay? (h/s)"
     answer = gets.chomp.downcase
-    break if %w(y n).include? answer
+    break if %w(h s).include? answer
     puts "Sorry, incorrect answer."
   end
 
-  answer == "n"
+  answer == "s"
 end
 
 def busted?(hand)
@@ -93,9 +94,13 @@ def dealer_turn(hand, deck)
     wait
   end
 
-  puts busted?(hand) ? "\nThe dealer is busted!" : "\nThe dealer stops there!"
+  display_dealer_end(hand)
   wait
   display_hand(hand, :dealer)
+end
+
+def display_dealer_end(hand)
+  puts busted?(hand) ? "\nThe dealer is busted!" : "\nThe dealer stops there!"
 end
 
 def compare_hands(count, player_hand, dealer_hand)
@@ -132,7 +137,8 @@ def declare_winner(count, first_hand, second_hand)
 end
 
 def welcome_message
-  puts "\nWelcome to our BlackJack table. First player at 5 points win. Good luck!"
+  puts "\nWelcome to our BlackJack table. First player at\
+  #{POINTS_TO_WIN} points win. Good luck!"
 end
 
 def good_bye_message
@@ -143,7 +149,8 @@ def play_again?
   answer = nil
 
   loop do
-    puts "\nNo player has reached 5 points yet. Do you want to keep playing? (y/n)"
+    puts "\nNo player has reached #{POINTS_TO_WIN} points yet. Do you want to \
+    keep playing? (y/n)"
     answer = gets.chomp.downcase
     break if %w(y n).include? answer
     puts "Sorry, incorrect answer."
@@ -152,15 +159,22 @@ def play_again?
   answer == 'y'
 end
 
-def five_points?(count)
-  if count[:player] == 5
+def match_over?(count)
+  if count[:player] == POINTS_TO_WIN
     puts "\nCongratulation, you won!"
     return true
-  elsif count[:dealer] == 5
+  elsif count[:dealer] == POINTS_TO_WIN
     puts "\nSorry, you lost!"
     return true
   end
   false
+end
+
+def max_total?(hand)
+  if hand_value(hand) == LIMIT
+    puts "\nYou've already got #{LIMIT} points! No need to draw again!"
+    true
+  end
 end
 
 def display_points(count)
@@ -177,9 +191,8 @@ loop do
   player_hand = deal_reveal_initial_cards(deck, :player)
   wait
   dealer_hand = deal_reveal_initial_cards(deck, :dealer)
-
   loop do
-    break if player_stop?
+    break if max_total?(player_hand) | player_stop?
     clear
     player_turn(player_hand, deck)
     if busted?(player_hand)
@@ -195,7 +208,7 @@ loop do
   wait
   declare_winner(points_count, player_hand, dealer_hand)
   display_points(points_count)
-  break if five_points?(points_count)
+  break if match_over?(points_count)
   break unless play_again?
   clear
 end
