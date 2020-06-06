@@ -79,6 +79,7 @@ class Board
     empty_spaces.empty?
   end
 
+  # rubocop:disable Metrics/AbcSize
   def someone_won?
     WINNING_LINES.each do |line|
       if grid[line[0]] + grid[line[1]] + grid[line[2]] == human.marker * 3
@@ -113,7 +114,6 @@ class TTTGame
       play_rounds
       break if game_over?
       break unless play_again?
-      puts "\nLet's play again!"
     end
     good_bye_message
   end
@@ -155,8 +155,12 @@ class TTTGame
     system 'clear'
   end
 
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Style/LineEndConcatenation
+  # rubocop:disable Metrics/LineLength
   def who_starts?
-    human.current_player = computer.current_player = false
+    human.current_player = false
+    computer.current_player = false
     choice = nil
     loop do
       puts "\nDo you want to start (1), let computer starts (2), " +
@@ -200,6 +204,7 @@ class TTTGame
     computer.current_player = !computer.current_player
   end
 
+  # rubocop:disable Style/UnneededInterpolation
   def human_plays
     choice = nil
     loop do
@@ -259,7 +264,11 @@ class TTTGame
       break if %w(y n).include? choice
       puts "\nSorry, wrong choice."
     end
-    choice == "y"
+    if choice == "y"
+      puts "\nLet's play again!"
+      return true
+    end
+    false
   end
 
   def game_over?
@@ -282,6 +291,7 @@ class TTTGame
          "has #{computer.victories} point(s)."
   end
 
+  # rubocop:disable Style/ParallelAssignment
   def display_grand_winner
     human.winner ? (first, second = human, computer) : (first, second = computer, human)
     puts "\n#{first.name} is the grand winner with #{first.victories} " +
