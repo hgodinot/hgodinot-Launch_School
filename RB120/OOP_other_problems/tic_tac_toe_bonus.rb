@@ -79,18 +79,17 @@ class Board
     empty_spaces.empty?
   end
 
-  # rubocop:disable Metrics/AbcSize
   def someone_won?
     WINNING_LINES.each do |line|
-      if grid[line[0]] + grid[line[1]] + grid[line[2]] == human.marker * 3
+      if human_wins?(line)
         human.add_victory_and_score
         return true
-      elsif grid[line[0]] + grid[line[1]] + grid[line[2]] == computer.marker * 3
+      elsif computer_wins?(line)
         computer.add_victory_and_score
         return true
       end
     end
-    nil
+    false
   end
 
   def joiner(arr, join)
@@ -99,6 +98,14 @@ class Board
     else
       "#{arr[-1]} (not much of a choice)."
     end
+  end
+
+  def human_wins?(line)
+    grid[line[0]] + grid[line[1]] + grid[line[2]] == human.marker * 3
+  end
+
+  def computer_wins?(line)
+    grid[line[0]] + grid[line[1]] + grid[line[2]] == computer.marker * 3
   end
 end
 
@@ -109,7 +116,7 @@ class TTTGame
   def play
     loop do
       who_starts?
-      board.reset
+      total_reset
       display_board
       play_rounds
       break if game_over?
@@ -126,6 +133,12 @@ class TTTGame
     @human = Human.new
     @computer = Computer.new(human.marker)
     @board = Board.new(@human, @computer)
+  end
+
+  def total_reset
+    board.reset
+    human.winner = nil
+    computer.winner = nil
   end
 
   def play_rounds
@@ -155,27 +168,33 @@ class TTTGame
     system 'clear'
   end
 
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Style/LineEndConcatenation
-  # rubocop:disable Metrics/LineLength
   def who_starts?
     human.current_player = false
     computer.current_player = false
-    choice = nil
-    loop do
-      puts "\nDo you want to start (1), let computer starts (2), " +
-           "or decide randomly (3)?"
-      choice = gets.chomp
-      break if %w(1 2 3).include? choice
-      puts "\nIncorrect choice, please pick 1, 2 or 3."
-    end
+    choice = player_chooses_who_starts
 
     case choice
     when "1" then human.current_player = true
     when "2" then computer.current_player = true
     else
-      rand(2) == 0 ? human.current_player = true : computer.current_player = true
+      random_start_choice
     end
+  end
+
+  def random_start_choice
+    rand(2) == 0 ? human.current_player = true : computer.current_player = true
+  end
+
+  def player_chooses_who_starts
+    choice = nil
+    loop do
+      puts "\nDo you want to start (1), let computer starts (2), " \
+           "or decide randomly (3)?"
+      choice = gets.chomp
+      break if %w(1 2 3).include? choice
+      puts "\nIncorrect choice, please pick 1, 2 or 3."
+    end
+    choice
   end
 
   def display_board
@@ -204,14 +223,13 @@ class TTTGame
     computer.current_player = !computer.current_player
   end
 
-  # rubocop:disable Style/UnneededInterpolation
   def human_plays
     choice = nil
     loop do
-      puts "\nWhere do you want to play? Choose between " +
-           "#{@board.joiner(@board.empty_spaces, ',')}"
+      puts "\nWhere do you want to play? Choose between " \
+           "#{board.joiner(board.empty_spaces, ',')}"
       choice = gets.chomp.to_i
-      break if @board.empty_spaces.include? choice
+      break if board.empty_spaces.include? choice
       puts "\nSorry, incorrect choice."
     end
     board.grid[choice] = human.marker
@@ -226,8 +244,7 @@ class TTTGame
 
   def attack_opportunity?
     Board::WINNING_LINES.each do |line|
-      if (board.grid[line[0]] + board.grid[line[1]] + board.grid[line[2]]).chars.sort.join ==
-         Board::EMPTY_MARKER + computer.marker * 2
+      if find_line?(line, computer.marker)
         (0..2).each do |idx|
           if board.grid[line[idx]] == Board::EMPTY_MARKER
             return line[idx]
@@ -240,8 +257,7 @@ class TTTGame
 
   def threat?
     Board::WINNING_LINES.each do |line|
-      if (board.grid[line[0]] + board.grid[line[1]] + board.grid[line[2]]).chars.sort.join ==
-         Board::EMPTY_MARKER + human.marker * 2
+      if find_line?(line, human.marker)
         (0..2).each do |idx|
           if board.grid[line[idx]] == Board::EMPTY_MARKER
             return line[idx]
@@ -252,11 +268,24 @@ class TTTGame
     nil
   end
 
+  def find_line?(line, marker)
+    (board.grid[line[0]] + board.grid[line[1]] +
+    board.grid[line[2]]).chars.sort.join == Board::EMPTY_MARKER + marker * 2
+  end
+
   def five_or_random_move
     board.grid[5] == Board::EMPTY_MARKER ? 5 : board.empty_spaces.sample
   end
 
   def play_again?
+    if player_keeps_playing?
+      puts "\nLet's play again!"
+      return true
+    end
+    false
+  end
+
+  def player_keeps_playing?
     choice = nil
     loop do
       puts "\nDo you want to keep playing ? (y/n)"
@@ -264,11 +293,8 @@ class TTTGame
       break if %w(y n).include? choice
       puts "\nSorry, wrong choice."
     end
-    if choice == "y"
-      puts "\nLet's play again!"
-      return true
-    end
-    false
+    clear
+    choice == "y"
   end
 
   def game_over?
@@ -280,6 +306,11 @@ class TTTGame
   end
 
   def display_result
+    display_round_result
+    display_score
+  end
+
+  def display_round_result
     if human.winner
       puts "\nCongratulations, #{human.name} won!"
     elsif computer.winner
@@ -287,14 +318,22 @@ class TTTGame
     else
       puts "\nIt's a tie!"
     end
-    puts "\n#{human.name} #{human.victories} has point(s). #{computer.name} " +
+  end
+
+  def display_score
+    puts "\n#{human.name} #{human.victories} has point(s). #{computer.name} " \
          "has #{computer.victories} point(s)."
   end
 
-  # rubocop:disable Style/ParallelAssignment
   def display_grand_winner
-    human.winner ? (first, second = human, computer) : (first, second = computer, human)
-    puts "\n#{first.name} is the grand winner with #{first.victories} " +
+    if human.winner
+      first = human
+      second = computer
+    else
+      first = computer
+      second = human
+    end
+    puts "\n#{first.name} is the grand winner with #{first.victories} " \
          "point(s) against #{second.victories} for #{second.name}."
   end
 end
