@@ -233,7 +233,7 @@ class TTTGame
       break if valid_marker_choice?(choice)
       puts "\nSorry, incorrect choice."
     end
-    board.grid[choice] = human.marker
+    board.grid[choice.to_i] = human.marker
   end
 
   def valid_marker_choice?(choice)
