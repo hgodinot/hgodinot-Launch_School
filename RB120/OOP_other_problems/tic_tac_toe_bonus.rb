@@ -1,6 +1,6 @@
 class Player
   MARKERS = %w(X O @ £ €)
-  attr_accessor :winner, :victories, :marker, :name, :current_player
+  attr_accessor :winner, :victories, :marker, :name, :current_player, :grand_winner
 
   def initialize(marker, name)
     @marker = marker
@@ -57,6 +57,7 @@ class Board
                   [[1, 4, 7], [2, 5, 8], [3, 6, 9]] +
                   [[1, 5, 9], [3, 5, 7]]
   EMPTY_MARKER = " "
+  MIDDLE_SQUARE = 5
 
   attr_accessor :grid, :human, :computer
 
@@ -228,17 +229,29 @@ class TTTGame
     loop do
       puts "\nWhere do you want to play? Choose between " \
            "#{board.joiner(board.empty_spaces, ',')}"
-      choice = gets.chomp.to_i
-      break if board.empty_spaces.include? choice
+      choice = gets.chomp
+      break if valid_marker_choice?(choice)
       puts "\nSorry, incorrect choice."
     end
     board.grid[choice] = human.marker
   end
 
+  def valid_marker_choice?(choice)
+    empty_space?(choice) && not_a_float?(choice)
+  end
+
+  def empty_space?(choice)
+    board.empty_spaces.include? choice.to_i
+  end
+
+  def not_a_float?(choice)
+    choice.to_i.to_s == choice
+  end
+
   def computer_plays
     choice = attack_opportunity?
     choice ||= threat?
-    choice ||= five_or_random_move
+    choice ||= best_square_or_random_move
     board.grid[choice] = computer.marker
   end
 
@@ -269,12 +282,24 @@ class TTTGame
   end
 
   def find_line?(line, marker)
-    (board.grid[line[0]] + board.grid[line[1]] +
-    board.grid[line[2]]).chars.sort.join == Board::EMPTY_MARKER + marker * 2
+    markers_on_line(line) == threat_or_opportunity(marker)
   end
 
-  def five_or_random_move
-    board.grid[5] == Board::EMPTY_MARKER ? 5 : board.empty_spaces.sample
+  def markers_on_line(line)
+    (board.grid[line[0]] + board.grid[line[1]] +
+    board.grid[line[2]]).chars.sort.join
+  end
+
+  def threat_or_opportunity(marker)
+    Board::EMPTY_MARKER + marker * 2
+  end
+
+  def best_square_or_random_move
+    best_square_free? ? Board::MIDDLE_SQUARE : board.empty_spaces.sample
+  end
+
+  def best_square_free?
+    board.grid[Board::MIDDLE_SQUARE] == Board::EMPTY_MARKER
   end
 
   def play_again?
@@ -289,12 +314,16 @@ class TTTGame
     choice = nil
     loop do
       puts "\nDo you want to keep playing ? (y/n)"
-      choice = gets.chomp
-      break if %w(y n).include? choice
+      choice = gets.chomp.downcase
+      break if valid_answer_choice(choice, %w(y n))
       puts "\nSorry, wrong choice."
     end
     clear
     choice == "y"
+  end
+
+  def valid_answer_choice(char, valid)
+    valid.include? char
   end
 
   def game_over?
