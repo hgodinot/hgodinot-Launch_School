@@ -1,0 +1,1 @@
+assert_equal 0, list.size
