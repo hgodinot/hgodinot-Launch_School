@@ -1,94 +1,36 @@
 class CircularBuffer
-  def initialize(max_size)
-    @max_size = max_size
-    @buffer = []
-  end
-
-  def read
-    raise BufferEmptyException if buffer.empty?
-    buffer.shift
-  end
-
-  def write(element)
-    update_buffer(element) { raise BufferFullException }
-  end
-
-  def write!(element)
-    update_buffer(element) { buffer.shift }
-  end
-
-  def clear
-    self.buffer = []
-  end
-
-  private
-
-  attr_accessor :buffer
-  attr_reader :max_size
-
-  def update_buffer(element)
-    return if element.nil?
-    yield if buffer.size == max_size
-    buffer << element
-  end
-
-  class BufferEmptyException < Exception; end
-  class BufferFullException < Exception; end
-end
-
-
-
-
-
-
-
-
-
-=begin
-class CircularBuffer
-  attr_accessor :buffer
-  
   def initialize(size)
     @buffer = Array.new(size)
   end
   
   def read
-    0.upto(buffer.size - 1) do |idx|
-      if buffer[idx] != nil
-        temp = buffer[idx]
-        buffer.delete_at(idx)
-        buffer.unshift(nil)
-        return temp
-      end
-    end
-    raise BufferEmptyException
-  end
-  
-  def write(input)
-    raise BufferFullException if buffer.first != nil
-    buffer.shift
-    buffer << input
-  end
-
-  def write!(input)
-    return if input == nil
-    deleted = false
-    0.upto(buffer.size - 1) do |idx|
-      if buffer[idx] == nil
-        buffer.delete_at(idx)
-        deleted = true
-        break
-      end
-    end
-    buffer.delete_at(0) unless deleted
-    buffer << input
+    raise BufferEmptyException if @buffer.all?(nil)
+    @buffer.push(nil).shift
   end
   
   def clear
-    self.buffer = buffer.map { |val| val = nil }
+    @buffer.map! { |_| nil }
   end
   
-  class BufferEmptyException < Exception; end
-  class BufferFullException < Exception; end
+  def write(num)
+    return if !n #Optional, for no error when writing nil in a full buffer
+    raise BufferFullException if @buffer.none?(nil)
+    @buffer[@buffer.index(nil)] = num
+  end
+  
+  def write!(n)
+    @buffer.any?(nil) ? write(n) : @buffer = @buffer[1..-1].push(n) if n
+  end
+  
+  class BufferEmptyException < Exception
+    def message
+      "Buffer is empty, can't read"
+    end
+  end
+  
+  class BufferFullException < Exception
+    def message
+      "Buffer is full, can't write"
+    end
+  end
 end
-=end

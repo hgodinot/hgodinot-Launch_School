@@ -1,5 +1,5 @@
-def missing(array)
-  (array.first..array.last).to_a - array
+def missing(arr)
+  [*arr.first..arr.last] - arr
 end
 
 

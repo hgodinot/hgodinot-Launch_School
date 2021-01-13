@@ -1,21 +1,23 @@
 class Bst
+  attr_reader :data, :right, :left
   
-  attr_accessor :data, :left, :right
-  
-  def initialize(first_number)
-    @data = first_number
+  def initialize(num)
+    @data = num
   end
   
-  def insert(number)
-    if number > data
-      right.nil? ? self.right = Bst.new(number) : right.insert(number)
+  def insert(num)
+    if num > data
+      right.nil? ? @right = Bst.new(num) : right.insert(num)
     else
-      left.nil? ? self.left = Bst.new(number) : left.insert(number)
+      left.nil? ? @left = Bst.new(num) : left.insert(num)
     end
   end
   
-  def each
-    #A reprendre
+  def each(&block)
+    to_a.each(&block)
   end
 
+  def to_a
+    [left.to_a, data, right.to_a].flatten
+  end
 end

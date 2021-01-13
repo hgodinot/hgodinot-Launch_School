@@ -1,15 +1,10 @@
-def which_lights_on?(n)
-  light_on = [false] * n
-
-  n.times do |idx|
-    ((idx )..(n-1)).step(idx + 1).to_a.each do |index|
-      light_on[index] = !light_on[index] 
-    end
+def light_on?(n)
+  result = [false] * n
+  1.upto(n) do |i|
+    ((0..n).step(i).to_a - [0]).each {|idx| result[idx - 1] = !result[idx - 1]}
   end
-
-  light_on.map!.with_index { |boolean, index| (index + 1) if boolean}.delete(nil)
-  light_on
+  result.map.with_index {|val, idx| idx + 1 if val}.reject {|val| val == nil}
 end
 
-p which_lights_on?(5)
-p which_lights_on?(10)
+p light_on?(5) #== [1, 4]
+p light_on?(10) #== [1, 4, 9]

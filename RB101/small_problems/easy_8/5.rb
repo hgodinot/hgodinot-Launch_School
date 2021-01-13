@@ -1,36 +1,13 @@
-#Without the two previous methods. Works, but not just in the same order as the solution
-=begin
-def palindromes(string)
-  result = []
-  (0...string.length).each do |idx|
-    (0...idx).each do |counter|
-      result << string [counter..idx] if 
-      string[counter..idx] == string[counter..idx].reverse && string[counter..idx].size != 1
-    end
-  end
-result
-end
-=end
-
-def substrings_at_start(string)
-  result = []
-  array = string.chars
-  1.upto(string.length) do |idx|
-    result << array.slice(0, idx).reduce(:+)
-  end
-  result
-end
-  
-def substrings(string)
-  result = []
-  (0...string.length).each do |idx|
-    result << substrings_at_start(string.slice(idx, string.length - idx))
-  end
-  result.flatten
+def leading_substrings(str)
+  str.chars.map.with_index { |_, idx| str.chars[0..idx].join }
 end
 
-def palindromes(string)
-  substrings(string).select {|sub| sub.size > 1 && sub == sub.reverse}
+def substrings(str)
+  (0..str.size - 1).map { |i| leading_substrings(str[i..str.size - 1]) }.flatten
+end
+
+def palindromes(str)
+  substrings(str).select { |wrd| wrd.size > 1 && wrd == wrd.reverse }
 end
   
 p palindromes('abcd') == []

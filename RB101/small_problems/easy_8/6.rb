@@ -26,4 +26,18 @@ def fizzbuzz(n1, n2)
   puts result.join(', ')
 end
 
-fizzbuzz(1, 15)
+#
+
+def fizzbuzz(n1, n2)
+  (n1..n2).map do |number|
+    case
+    when number % 3 == 0 && number % 5 == 0 then 'FizzBuzz'
+    when number % 5 == 0 then 'Buzz'
+    when number % 3 == 0 then 'Fizz'
+    else number
+    end
+  end
+end
+
+
+p fizzbuzz(1, 15)

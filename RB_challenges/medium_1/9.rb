@@ -1,8 +1,6 @@
 class Clock
-  attr_accessor :hour, :minute
-  
-  def self.at(hour, minute = 0)
-    Clock.new(hour, minute)
+  def self.at(h, m = 0)
+    Clock.new(h, m)
   end
   
   def initialize(hour, minute)
@@ -10,27 +8,21 @@ class Clock
     @minute = minute
   end
   
-  def +(other)
-    h, m = other.divmod(60)
-    h += 1 if m + minute >= 60
-    self.hour = (hour + h) % (24)
-    self.minute = (minute + m) % (60)
-    self
-  end
-  
-  def -(other)
-    h, m = other.divmod(60)
-    h += 1 if minute - m < 0
-    self.hour = (hour - h) % (24)
-    self.minute = (minute - m).abs
-    self
-  end
-  
   def to_s
-    format('%02d:%02d', hour, minute)
+    format("%02d:%02d", @hour, @minute)
   end
   
-  def ==(other)
-    hour == other.hour && minute == other.minute
+  def +(added_m)
+    added_h, @minute = (@minute + added_m).divmod(60)
+    @hour = (@hour + added_h) % 24
+    self
+  end
+  
+  def -(sub_m)
+    self + (-sub_m)
+  end
+  
+  def ==(other_clock)
+    self.to_s == other_clock.to_s
   end
 end

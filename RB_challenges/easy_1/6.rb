@@ -1,7 +1,6 @@
 class Anagram
   def initialize(str)
     @word = str.downcase
-    @letters = @word.chars.sort
   end
   
   def match(array)
@@ -11,6 +10,6 @@ class Anagram
   private
   
   def anagram?(word)
-    word.downcase != @word && word.downcase.chars.sort == @letters
+    word.downcase != @word && word.downcase.chars.sort == @word.chars.sort
   end
 end

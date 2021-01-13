@@ -1,14 +1,13 @@
-def featured(n)
+def featured(num)
   n += 1
-  n += 1until n % 7 == 0 && n.odd?
+  n += 1 until n % 7 == 0 && n.odd?
   
-  loop do
-    return n if n.to_s.chars == n.to_s.chars.uniq
-    n += 14
-    break if n > 9876543210
+  until num.digits.uniq == num.digits || num > 9876543210
+    num += 14
   end
   
-  "There is no possible number that fulfills those requirements"
+  return "No number that fulfills those requirements" if num > 9876543210
+  num
 end
 
 p featured(12) == 21

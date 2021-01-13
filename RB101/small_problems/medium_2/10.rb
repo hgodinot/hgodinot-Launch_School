@@ -1,5 +1,5 @@
 def sum_square_difference(number)
-  (1..number).sum ** 2 - (1..number).to_a.reduce { |sum, x| sum + x**2 }
+  (1..n).sum ** 2 - (1..n).map { |x| x ** 2 }.sum
 end
 
 p sum_square_difference(3) == 22 # -> (1 + 2 + 3)**2 - (1**2 + 2**2 + 3**2)

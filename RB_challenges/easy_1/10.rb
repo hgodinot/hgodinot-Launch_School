@@ -1,36 +1,46 @@
 class Integer
+  UNITS = ['I', 'V', 'X']
+  DECIMALS = ['X', 'L', 'C']
+  HUNDREDS = ['C', 'D', 'M']
+  THOUSANDS = ['M']
+  
   def to_roman
-    raise ArgumentError.new("Too big, roman numbers only go up to 3999 (MMMCMXCIX)") if self > 3999
-    num_to_units = {1 => [1], 2 => [1, 1], 3 => [1, 1, 1], 4 => [1, 5] , 5 => [5],
-                  6 => [5, 1], 7 => [5, 1, 1], 8 => [5, 1, 1, 1], 9 => [1, 10]}
-    num_to_rom = { 1 => 'I', 5 => 'V', 10 => 'X', 50 => 'L', 100 => 'C', 500 => 'D', 1000 => 'M'}
-    
-    numbers = self.to_s.chars.map.with_index do |x, idx|
-      if x != '0'
-        [x.to_i, 10 ** ((self.to_s.chars.length) - idx - 1)]
+    raise ArgumentError.new, "Roman numbers don't go past 3999" if self > 3999
+    array = self.digits.map.with_index { |val, idx| val * 10 ** idx }.reverse
+    array.each_with_object("") do |val, result|
+      case val
+      when 0..9     then table = UNITS
+      when 10..90   then table = DECIMALS
+      when 100..900 then table = HUNDREDS
+      else               table = THOUSANDS
+      end
+      case val.digits.last
+      when 0..3 then result << (table[0] * val.digits.last)
+      when 4    then result << (table[0] + table[1])
+      when 5..8 then result << (table[1] + table[0] * (val.digits.last - 5))
+      else           result << (table[0] + table[2])
       end
     end
-    numbers.delete(nil)
-    numbers.map! do |subarray|
-      [num_to_units[subarray[0]], subarray[1]]
-    end
-    numbers.map! do |subarray|
-      subarray[0].map do |unit|
-        unit * subarray[1]
-      end
-    end
-    numbers.map! do |subarray|
-      subarray.map do |unit|
-        num_to_rom[unit]
-      end
-    end
-    numbers.join
   end
+end
 
-  def self.from_roman(string)
-    1.upto(3999) do |x|
-      return x if x.to_roman == string
-    end
-    "It appears your roman number is not valid. Roman numbers only goes up to MMMCMXCIX"
+# or in a more brute force way
+
+class Integer
+  
+  CONVERSION = { 1000 => "M", 2000 => "MM", 3000 => "MMM",
+  100 => "C", 200 => "CC", 300 => "CCC", 400 => "CD", 500 => "D",
+  600 => "DC", 700 => "DCC", 800 => "DCCC", 900 => "CM",
+  10 => "X", 20 => "XX", 30 => "XXX", 40 => "XL", 50 => "L", 
+  60 => "LX", 70 => "LXX", 80 => 'LXXX', 90 => "XC",
+  1 => "I", 2 => "II", 3 => "III", 4 => "IV", 5 => "V",
+  6 => "VI", 7 => "VII", 8 => "VIII", 9 => "IX"}
+  
+  def to_roman
+    raise ArgumentError.new("No number greater than 3999") if 
+    self.class != Integer || self > 3999
+
+    self.digits.map.with_index { |val, idx| val * 10 ** idx }.reverse
+    .map { |digit| CONVERSION[digit] }.join
   end
 end

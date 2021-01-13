@@ -4,6 +4,7 @@ require_relative '9'
 
 Minitest::Reporters.use!
 
+
 class LinkedListTest < Minitest::Test
   def test_element_datum
     e = Element.new(1)

@@ -1,7 +1,7 @@
-def swap(string)
-  result = string.split(" ").map do |word| 
-    word [0], word[-1] = word[-1], word[0]
-    word
-  end
-  result.join(" ")
+def swap(str)
+  str.split.map{ |wrd| wrd.size > 1 ? wrd[-1] + wrd[1..-2] + wrd[0] : wrd }.join(" ")
 end
+
+p swap('Oh what a wonderful day it is') == 'hO thaw a londerfuw yad ti si'
+p swap('Abcde') == 'ebcdA'
+p swap('a') == 'a'

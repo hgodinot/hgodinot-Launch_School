@@ -1,11 +1,7 @@
-def after_midnight(time)
-  result = (time[0,2].to_i)*60 + time[3,2].to_i
-  result = 0 if result == 1440
-  result
+def after_midnight(str)
+  (str[0, 2].to_i * 60 + str[3, 2].to_i) % 1440
 end
 
-def before_midnight(time)
-  result = 1440 - after_midnight(time)
-  result = 0 if result == 1440
-  result
+def before_midnight(str)
+  (1440 - str[0, 2].to_i * 60 - str[3, 2].to_i) % 1440
 end

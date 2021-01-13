@@ -1,5 +1,5 @@
-def each_cons(array)
-  0.upto(array.length - 2) { |idx|  yield(array[idx], array[idx + 1]) }
+def each_cons(arr)
+  [*0..arr.size - 2].each { |idx| yield(arr[idx, 2]) }
   nil
 end
 

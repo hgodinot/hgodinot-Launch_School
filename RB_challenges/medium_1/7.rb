@@ -1,37 +1,50 @@
 require 'date'
-
 class Meetup
+  ORD = {sunday: 0, monday: 1, tuesday: 2, wednesday: 3, 
+                thursday: 4, friday: 5, saturday: 6}
+                
   def initialize(month, year)
     @month = month
     @year = year
   end
   
-  def day(weekday, number)
-    1.upto(31) do |n|
-      return Date.new(year, month, n) if wday?(weekday, n) && order?(number, n)
+  def day(weekday, order)
+    day = 1
+    (1..7).each { |n| day = n if Date.new(@year, @month, n).wday == ORD[weekday] }
+    case order
+    when :first
+    when :second then day += 7
+    when :third then day += 14
+    when :fourth then day += 21
+    when :teenth then day += (day >= 6 ? 7 : 14)
+    else 
+      day += 7 until (Date.new(@year, @month, day) + 7).month != @month
     end
-  end
-  
-  protected
-  
-  attr_reader :month, :year
-  
-  def wday?(wday, n)
-    wday == :monday && Date.new(year, month, n).monday? ||
-    wday == :tuesday && Date.new(year, month, n).tuesday? ||
-    wday == :wednesday && Date.new(year, month, n).wednesday? ||
-    wday == :thursday && Date.new(year, month, n).thursday? ||
-    wday == :friday && Date.new(year, month, n).friday? ||
-    wday == :saturday && Date.new(year, month, n).saturday? ||
-    wday == :sunday && Date.new(year, month, n).sunday? 
-  end
-  
-  def order?(ord, n)
-    ord == :teenth && (13..19).include?(n) ||
-    ord == :first && (1..7).include?(n) ||
-    ord == :second && (8..14).include?(n) ||
-    ord == :third && (15..21).include?(n) ||
-    ord == :fourth && (22..28).include?(n) ||
-    ord == :last && Date.new(year, month, n).next_day(7).month != month
+    Date.new(@year, @month, day)
   end
 end
+
+# Other way
+
+class Meetup
+  require 'date'
+  def initialize(month, year)
+    @year = year
+    @month = month
+  end
+  
+  def day(wday, ord)
+    start = case ord
+    when :first then 1
+    when :second then 8
+    when :third then 15
+    when :fourth then 22
+    when :last then Date.civil(@year, @month, -1).mday - 6
+    when :teenth then 13
+    end
+    loop do
+      break if Date.new(@year, @month, start).strftime('%A').downcase.to_sym == wday
+      start += 1
+    end
+    Date.new(@year, @month, start)
+  end

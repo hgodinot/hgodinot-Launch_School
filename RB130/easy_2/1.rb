@@ -1,10 +1,8 @@
-def step(min, max, range)
-  loop do
-    yield min
-    min += range
-    break if min > max
+def step(first, last, diff)
+  while first <= last
+    yield(first)
+    first += diff
   end
-  min
 end
 
 step(1, 10, 3) { |value| puts "value = #{value}" }

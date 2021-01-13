@@ -1,47 +1,62 @@
-require "pry"
 class Crypto
-  def initialize(str)
-    @n_string = str.gsub(/\W/, "").downcase
-    @size = Math.sqrt(@n_string.size).ceil
-    
-    remainder = @n_string.size % @size
-    plain = @n_string.scan(/.{#{@size}}/) << @n_string[-remainder, remainder]
-    @plain = remainder > 0 ? plain: plain[0..-2]
-    
-    @cypher = ""
-    0.upto(plain[0].size - 1) { |idx| @plain.each { |val| @cypher << val[idx] if val[idx] } }
-    
-    column_length =  (@cypher.size.to_f / @size).ceil
-    remainder = @cypher.size - (column_length - 1) * @size
-    norm = @cypher.scan(/.{#{column_length}}/).join(" ") + " #{ @cypher[-remainder, remainder]}"
-    @norm_cypher = remainder > 0 ? norm : norm[0..-2]
-    
-  end
+  attr_reader :normalize_plaintext, :size
   
-  def normalize_plaintext
-    @n_string
-  end
-  
-  def size
-    @size
+  def initialize(text)
+    @normalize_plaintext = text.gsub(/\W/, "").downcase
+    @size = Math.sqrt(@normalize_plaintext.size).ceil
   end
   
   def plaintext_segments
-    @plain
+    @normalize_plaintext.scan(/.{1,#{@size}}/)
   end
   
   def ciphertext
-    @cypher
+    plaintext_segments.map do |wrd| 
+      (@size - wrd.size).times { |_| wrd << " " }
+      wrd
+    end.map(&:chars).transpose.flatten.join.gsub(/\s+/, "")
   end
   
   def normalize_ciphertext
-    @norm_cypher
+    text = ciphertext.chars
+    array_size = [text.size / @size] * @size
+    (text.size - array_size.sum).times { |i| array_size[i] += 1 }
+    array_size.map { |n| [*1..n].map.with_object([]) { |_, arr| arr << text.shift}.join }.join(" ")
   end
-  
-  
 end
 
-crypto = Crypto.new('If man was meant to stay on the ground god would have given us roots')
-   p crypto.ciphertext
-   p crypto.normalize_ciphertext
- 
+#
+
+class Crypto
+  def initialize(str)
+    @text = str.gsub(/[\W]/,"").downcase
+  end
+  
+  def normalize_plaintext
+    @text
+  end
+  
+  def size
+    Math.sqrt(@text.size).ceil
+  end
+  
+  def plaintext_segments
+    @text.scan(/.{1,#{size}}/)
+  end
+  
+  def ciphertext
+    array_sub = plaintext_segments.map(&:chars)
+    (array_sub.first.size - array_sub.last.size).times { array_sub.last << "" }
+    array_sub.transpose.join
+  end
+
+  def normalize_ciphertext
+    plaintext_segments.map do |str|
+      if str.size != plaintext_segments.first.size
+        str << " " * (plaintext_segments.first.size - str.size)
+      else
+        str
+      end
+    end.map  { |str| str.chars}.transpose.map { |arr| arr.join.strip }.join(" ")                                               
+  end
+end

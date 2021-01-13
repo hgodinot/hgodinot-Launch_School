@@ -36,3 +36,23 @@ class Diamond
     "#{@letter}#{" " * (((counter - 1) * 2) + 1)}#{@letter}\n"
   end
 end
+
+=begin 
+Shorter version but less human friendly
+
+class Diamond
+  def self.make_diamond(letter)
+    limit = letter.ord - 65
+    left_side = ["A".center(2 * limit + 1) + "\n"]
+    return left_side[0] if limit == 0
+    
+    1.upto(limit - 1) do |diff|
+      left = (65 + diff).chr.rjust(limit - diff + 1)
+      left_side << (left + " " * (2 * diff - 1) + left.reverse + "\n")
+    end
+    
+    middle = [letter + " " * (2 * limit - 1) + letter + "\n"]
+    (left_side + middle + left_side.reverse).join
+  end
+end
+=end

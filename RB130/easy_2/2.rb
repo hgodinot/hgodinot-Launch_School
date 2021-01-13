@@ -1,7 +1,5 @@
-def zip(array1, array2)
-  result = []
-  0.upto(array1.size - 1) { |idx| result << [array1[idx], array2[idx]]}
-  result
+def zip(arr1, arr2)
+  arr1.map.with_index { |val, i| [val, arr2[i]] }
 end
 
 

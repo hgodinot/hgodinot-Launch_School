@@ -1,5 +1,5 @@
 def count(array)
-  array.select { |value|yield(value) }.size
+  array.select { |value| yield(value) }.size
 end
 
 

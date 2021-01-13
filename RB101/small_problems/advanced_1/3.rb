@@ -1,7 +1,15 @@
-def transpose(arr)
-  result = []
-  3.times {|i| result << arr.map.with_index { |_, idx| arr[idx][i]}}
-  result
+def transpose(m)
+  [0, 1, 2].each_with_object([]) { |i, a| a << m.map.with_index { |_, idx| m[idx][i] } }
+end
+
+# 
+
+def transpose(matr)
+  [0, 1, 2].each_with_object([]) do |idx1, arr1|
+    arr1 << [0, 1, 2].each_with_object([]) do |idx2, arr2|
+      arr2 << matr[idx2][idx1]
+    end
+  end
 end
 
 matrix = [

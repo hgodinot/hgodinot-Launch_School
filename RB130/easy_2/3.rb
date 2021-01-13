@@ -1,7 +1,5 @@
-def map(array)
-  result = []
-  array.each { |val| result << yield(val) }
-  result
+def map(arr)
+  arr.each_with_object([]) { |x, array| array << yield(x) }
 end
 
 

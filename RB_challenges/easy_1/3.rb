@@ -1,10 +1,9 @@
 class Octal
-  def initialize(s)
-    @string = s
+  def initialize(str)
+    @num = str.match(/[^0-7]/) ? 0 : str.to_i
   end
   
   def to_decimal
-    return 0 if @string.match(/[^0-7]/)
-    @string.to_i.digits.reverse.reduce(0) { |acc, val| acc * 8 + val  }
+    @num.digits.reverse.reduce(0) { |acc, val| acc * 8 + val  }
   end
 end

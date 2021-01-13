@@ -1,7 +1,5 @@
 def sequence(num)
-  arr = []
-  1.upto(num) { |x| arr << x }
-  arr
+  (1..num).to_a
 end
 
 p sequence(5) == [1, 2, 3, 4, 5]

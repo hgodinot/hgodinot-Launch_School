@@ -1,7 +1,5 @@
 def sum_of_sums(array)
-  sum = 0
-  1.upto(array.size) {|n| sum += array.slice(0, n).reduce(:+)}
-  sum
+  arr.map.with_index { |_, idx| arr[0..idx].sum }.sum
 end
 
 p sum_of_sums([3, 5, 2]) == (3) + (3 + 5) + (3 + 5 + 2) # -> (21)

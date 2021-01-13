@@ -1,7 +1,6 @@
-def twice(number)
-  return number * 2 if number.to_s.size.odd?
-  m = number.to_s.size/2
-  number.to_s[0, m] == number.to_s[m, m*2] ? number : number * 2
+def twice(num)
+  m = num.to_s.size/2
+  num.to_s.size.even? && num.to_s[0, m] == num.to_s[m, m*2] ? num : num * 2
 end
 
 p twice(444) == 888

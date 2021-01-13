@@ -1,9 +1,4 @@
-
-def longest_sentence(text)
-  sentences = text.split(/[\.!\?]/).map { |sentence| sentence.split }
-  sentences.sort_by! { |words| words.length }
-  puts sentences[-1].join(" ")
-  puts "This sentences is #{sentences[-1].length} words long."
+def longest_sentence(str)
+  sentence = str.split(/[\.\!\?]/).sort_by{ |sen| sen.split.size }.last
+  print "The longest sentence is #{sentence.split.size} words long: #{sentence}"
 end
-
-p longest_sentence("I think so. I thought so ? Yes !!!")

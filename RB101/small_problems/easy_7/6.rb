@@ -1,16 +1,13 @@
 def staggered_case(string)
-  idx = -1
-  
-  result = string.split("").map do |char|
+  idx = 0
+  string.chars.map do |char|
     if !!/[a-zA-Z]/.match(char)
       idx += 1
-      idx.even? ? char.upcase : char.downcase
+      idx.odd? ? char.upcase : char.downcase
     else
       char
     end
-  end
-  
-  result.join
+  end.join
 end
 
 p staggered_case('I Love Launch School!') == 'I lOvE lAuNcH sChOoL!'

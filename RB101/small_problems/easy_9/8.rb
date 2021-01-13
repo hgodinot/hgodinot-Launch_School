@@ -1,7 +1,5 @@
-def sequence(count, n)
-  result = []
-  1.upto(count) { |x| result << x * n }
-  result
+def sequence(size, start)
+  ([start] * size).map.with_index { |val, idx| val * (idx + 1) }
 end
 
 p sequence(5, 1) == [1, 2, 3, 4, 5]

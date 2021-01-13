@@ -1,9 +1,3 @@
-def reverse_words(string, newstring = [])
-  string.split.each do |word| 
-    word.reverse! if word.length >= 5
-    newstring << word
-  end 
-  
-  newstring.join(' ')
+def reverse_words(str)
+  str.split.map { |wrd| wrd.size > 4 ? wrd.chars.reverse.join : wrd  }.join(" ")
 end
-

@@ -18,9 +18,6 @@ class Luhn
   end
   
   def self.create(n)
-    0.upto 9 do |x|
-      number = n.digits.reverse.push(x).join.to_i
-      return number if Luhn.new(number).valid?
-    end
+     (0..9).each { |x| return (n * 10 + x) if Luhn.new(n * 10 + x).valid? }
   end
 end

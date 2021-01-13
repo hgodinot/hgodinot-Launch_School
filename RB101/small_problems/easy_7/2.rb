@@ -6,6 +6,18 @@ def letter_case_count(string)
   hash_count
 end
 
+#
+
+def letter_case_count_bis(str)
+  str.chars.each_with_object({lowercase: 0, uppercase: 0, neither: 0}) do |char, hsh|
+    case char
+    when ("a".."z") then hsh[:lowercase] += 1
+    when ("A".."Z") then hsh[:uppercase] += 1
+    else                 hsh[:neither] += 1
+    end
+  end
+end
+
 
 
 p letter_case_count('abCdef 123') == { lowercase: 5, uppercase: 1, neither: 4 }

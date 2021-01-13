@@ -8,14 +8,11 @@ def rotate_rightmost_digits(number, n)
   result.join.to_i
 end
 
-def max_rotation(number)
-  l = number.to_s.size
-  digit_order = l
-  l.times do
-    number = rotate_rightmost_digits(number, digit_order)
-    digit_order -= 1
+def max_rotation(num)
+  num.digits.size.downto(2) do |i|
+    num = rotate_rightmost_digits(num, i)
   end
-  number
+  num
 end
 
 p max_rotation(735291) == 321579

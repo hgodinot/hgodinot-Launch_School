@@ -1,29 +1,39 @@
 class School
   def initialize
-    @roster = {}
+    @hsh = Hash.new
   end
   
   def to_h
-    temp_array = roster.sort
-    result = {}
-    temp_array.each { |pair| result[pair[0]] = [] }
-    temp_array.each do |pair|
-      pair[1].sort.each { |name| result[pair[0]] << name }
-    end
-    result
+    @hsh.sort.to_h
+  end
+  
+  def add(name, grade)
+    @hsh[grade].nil? ? @hsh[grade] = [name] : (@hsh[grade] << name).sort!
   end
   
   def grade(grd)
-    #roster[grd] || []
-    roster.has_key?(grd) ? roster[grd] : []
+    @hsh[grd] || []
   end
-  
-  def add(student, grade)
-    roster.has_key?(grade) ? roster[grade] << student : roster[grade] = [student]
-  end
-  
-  protected
-  attr_accessor :roster
 end
 
+# other way:
 
+class School
+  attr_reader :hash
+  
+  def initialize
+    @hash = Hash.new { |hash, grade| hash[grade] = [] }
+  end
+  
+  def to_h
+   hash.sort.each { |grade, name| name.sort! }.to_h
+  end
+  
+  def add(name, grade)
+    hash[grade] << name
+  end
+  
+  def grade(n)
+    @hash[n]
+  end
+end

@@ -1,11 +1,3 @@
-def count_occurrences(array, hash = {})
-  array.each do |element|
-    unless hash[element] != nil
-    hash[element] = array.count(element)
-    end
-  end
-
-hash.each do |key, value|
-  puts "#{key} => #{value}"
-end
+def count_occurrences(list)
+  list.uniq.each { |item| puts "#{item} => #{list.count(item)}" }
 end

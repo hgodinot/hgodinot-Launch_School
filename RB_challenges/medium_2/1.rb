@@ -2,6 +2,42 @@ class Palindromes
   def initialize(max_factor:, min_factor: 1)
     @max = max_factor
     @min = min_factor
+    @palindromes = Hash.new { |hash, value| hash[value] = [] }
+  end
+
+  def generate
+    [*@min..@max].repeated_combination(2)
+                 .select { |prod| palindrome?(prod) }
+                 .each { |prod| @palindromes[prod.reduce(:*)] << prod }
+  end
+  
+  def palindrome?(arr)
+    arr.reduce(:*).to_s ==  arr.reduce(:*).to_s.reverse
+  end
+  
+  def smallest
+    Factor.new(@palindromes.min)
+  end
+  
+  def largest
+    Factor.new(@palindromes.max)
+  end
+end
+
+class Factor < Palindromes
+  attr_reader :value, :factors
+  def initialize(palindrome)
+    @value = palindrome.first
+    @factors = palindrome.last
+  end
+end
+
+# Another way to do it, with struct
+
+class Palindromes
+  def initialize(max_factor:, min_factor: 1)
+    @max = max_factor
+    @min = min_factor
     @hsh = {}
   end
 
@@ -36,5 +72,5 @@ class Palindromes
   def actualise_factors(array)
     @hsh.has_key?(array.reduce(:*)) ? @hsh[array.reduce(:*)] << array : @hsh[array.reduce(:*)] = [array]
   end
-  
 end
+

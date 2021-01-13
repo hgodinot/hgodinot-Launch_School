@@ -1,5 +1,5 @@
-def word_cap(string)
-  string.split.each {|word| word.capitalize}.join(" ")
+def word_cap(str)
+  str.split.map { |wrd| wrd.capitalize }.join(" ")
 end
 
 p word_cap('four score and seven') == 'Four Score And Seven'

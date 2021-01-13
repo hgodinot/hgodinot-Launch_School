@@ -1,27 +1,21 @@
-def bubble_sort!(array)
-  return array if array.length <= 1
-  
+def bubble_sort!(arr)
   loop do
-  array_temp = array.dup
-    0.upto(array.length - 2) do |idx|
-      if array[idx] > array[idx + 1]
-        array[idx], array [idx + 1] = array [idx + 1], array [idx]
-      end
+    arr_temp = arr.dup
+    0.upto(arr.size - 2) do |idx|
+      arr[idx], arr[idx + 1] = arr[idx + 1], arr[idx] if arr[idx] > arr[idx + 1]
     end
-  break if array_temp == array
+  break if arr_temp == arr.dup
   end
-  
-  array
 end
 
 array = [5, 3]
-p bubble_sort!(array)
+bubble_sort!(array)
 p array == [3, 5]
 
 array = [6, 2, 7, 1, 4]
-p bubble_sort!(array)
+bubble_sort!(array)
 p array == [1, 2, 4, 6, 7]
 
 array = %w(Sue Pete Alice Tyler Rachel Kim Bonnie)
-p bubble_sort!(array)
+bubble_sort!(array)
 p array == %w(Alice Bonnie Kim Pete Rachel Sue Tyler)

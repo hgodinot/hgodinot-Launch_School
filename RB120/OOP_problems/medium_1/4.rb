@@ -1,21 +1,20 @@
 class CircularQueue
-  def initialize(max_size)
-    @array = Array.new(max_size)
+  def initialize(size)
+    @buffer = Array.new(size)
   end
   
-  def enqueue(element)
-    @array.shift
-    @array.push(element)
+  def enqueue(n)
+    if @buffer.none?(nil)  
+      @buffer.shift
+      @buffer.push(n)
+    else
+      @buffer[@buffer.index(nil)] = n
+    end
   end
   
   def dequeue
-    0.upto(@array.size - 1) do |idx|
-      if @array[idx] != nil
-        @array.unshift(nil)
-        return @array.delete_at(idx + 1)
-      end
-    end
-  nil
+    @buffer.push(nil)
+    @buffer.shift
   end
 end
 

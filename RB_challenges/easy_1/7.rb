@@ -3,8 +3,7 @@ class DNA
     @dna = dna.chars
   end
   
-  def hamming_distance(strand)
-    limit = [strand.size, @dna.size].min
-    @dna[0, limit].select.with_index { |val, idx| val != strand[idx] }.count
+  def hamming_distance(str)
+    @dna.select.with_index { |chr, idx| str[idx] && chr != str[idx] }.size
   end
 end

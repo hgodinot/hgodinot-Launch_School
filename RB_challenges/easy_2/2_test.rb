@@ -1,6 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/reporters'
-require_relative 'ex'
+require_relative '2'
 
 Minitest::Reporters.use!
 

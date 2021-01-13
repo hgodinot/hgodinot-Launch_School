@@ -9,12 +9,8 @@ def substrings_at_start(string)
   result
 end
 
-def substrings(string)
-  result = []
-  (0...string.length).each do |idx|
-    result << substrings_at_start(string.slice(idx, string.length - idx))
-  end
-  result.flatten
+def substrings(str)
+  (0..str.size - 1).map { |i| leading_substrings(str[i..str.size - 1]) }.flatten
 end
 
 
