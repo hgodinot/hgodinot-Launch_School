@@ -52,5 +52,5 @@ class OCR
        .map { |arr| arr.join("\n") << "\n" }
   end
 end
-=end
+
 

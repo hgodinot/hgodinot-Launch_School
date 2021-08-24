@@ -1,9 +1,9 @@
 class Trinary
   def initialize(str)
-     @num = str.match(/[^0-2]/) ? 0 : str.to_i
+    @arr = str.match(/[^0-2]/) ? [0] : str.chars.map(&:to_i)
   end
-  
+
   def to_decimal
-    @num.to_i.digits.reverse.reduce { |acc, val| acc * 3 + val }
+    @arr.reduce { |acc, n| acc * 3 + n }
   end
 end

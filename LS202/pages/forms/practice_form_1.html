@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Launch School</title>
+  <meta charset="utf-8">
+  <style>
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <form action="#" method="post">
+    <fieldset>
+    <dl>
+      <dt><label for="first_name">First Name</label></dt>
+      <dd>
+        <input type="text" name="first_name" id="first_name"
+         required>
+      </dd>
+  
+      <dt><label for="last_name">Last Name</label></dt>
+      <dd>
+        <input type="text" name="last_name" id="last_name" 
+         required>
+      </dd>
+  
+      <dt><label for="email">Email Address</label></dt>
+      <dd>
+        <input type="email" name="email" id="email"
+         autocomplete="off" autocorrect="off" 
+         autocapitalize="none" required>
+      </dd>
+
+      <dt><label for="phone">Phone Number</label></dt>
+      <dd>
+        <input type="tel" name="phone" id="phone" 
+        placeholder="###-###-####" required>
+      </dd>
+      
+      <dt><label for="phone-type">Select phone type"</label></dt>
+      <dd>
+        <select name="phone-type" id="phone-type">
+          <option value="home" selected>Home</option>
+          <option value="business">Business</option>
+          <option value="mobile">Mobile</option>
+        </select>
+      </dd>
+
+      <dt>
+        <label for="message">Optional message</label>
+      </dt>
+      <dd>
+        <textarea id="message" name="message" rows="6" col="80" 
+                  placeholder="Type your message here."></textarea>
+      </dd>
+      
+      <input type="submit" value="Send">
+    </dl>
+    </fieldset>
+  </form>
+</body>
+</html>

@@ -1,3 +1,33 @@
+# Most elegant solution:
+
+class Integer
+  ROMANS = [["I", "V"], ["X", "L"], ["C", "D"], ["M"]]
+
+  def to_roman
+    return "Roman Numbers can't be more than 3999" if self >= 4000
+
+    self.digits
+        .reverse
+        .map
+        .with_index { |x, i| digit_to_roman(x, self.to_s.size - i - 1) }
+        .join("")
+  end
+
+  def digit_to_roman(num, idx)
+    digits = ROMANS[idx]
+
+    case num
+    when 1..3 then digits[0] * num
+    when 4    then digits[0] + digits[1]
+    when 5..8 then digits[1] + digits[0] * (num- 5)
+    when 9    then digits[0] + ROMANS[idx + 1][0]
+    else           ''
+    end
+  end
+end
+
+# Other way, less elegant
+
 class Integer
   UNITS = ['I', 'V', 'X']
   DECIMALS = ['X', 'L', 'C']

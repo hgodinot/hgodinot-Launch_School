@@ -1,0 +1,133 @@
+/* General settings */
+
+html {
+  font-family: Helvetica, sans-serif;
+  font-size: 28px;
+}
+
+article {
+  width: 680px;
+  box-sizing: border-box;
+  border: 2px solid black;
+  padding: 10px 15px 15px 15px;
+}
+
+/* Header */
+
+h1 {
+  font-size: 2rem;
+}
+
+h1, p {
+  margin: 0;
+}
+
+header {
+  padding-bottom: 5px;
+  border-bottom: 30px solid black;
+}
+
+/* General table settings */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 2px 0;
+}
+
+th {
+  text-align: left;
+}
+
+td:last-child, th:last-child {
+  text-align: right;
+}
+
+/* First table */
+
+table:first-of-type {
+  margin-bottom: 10px;
+}
+
+table:first-of-type th {
+  padding: 10px 0;
+}
+
+table:first-of-type tbody td {
+  padding: 5px 0;
+  border-bottom: 15px solid black;
+}
+
+/* First two tables, set general bottom border */
+
+table:not(:last-child) th  {
+  border-bottom: 1px solid;
+}
+
+/* Second table */
+
+sup {
+  vertical-align: 3px;
+}
+
+table:nth-of-type(2) thead th {
+  padding: 1px;
+}
+
+table:nth-of-type(2) td, tfoot {
+  border-top: 1px solid;
+}
+
+table:nth-of-type(2) tr:nth-of-type(10) td {
+  border-width: 20px;
+}
+
+table:nth-of-type(2) tr:first-child td {
+  border: none;
+}
+
+/* Set the indents for the middle table */
+
+table:nth-of-type(2) td:first-child:not([colspan="2"]) {
+  width: 1rem;
+  border: none;
+}
+
+table:nth-of-type(2) tfoot td {
+  font-size: .9rem;
+  font-weight: normal;
+  text-align: left;
+  text-indent: -.7rem;
+  padding: .5rem 0 .5rem .7rem;
+}
+
+/* Third table settings */
+
+table:last-child {
+  font-size: .8rem;      
+}
+
+table:last-child th, table:last-child td {
+  padding: 2px 0;
+  font-weight: normal;
+  text-align: left;
+}
+
+table:last-child thead th {
+  width: 21%;
+  padding: 1px;
+  border-bottom: 1px solid;
+}
+
+table:last-child thead th:first-child {
+  width: 37%;
+}
+
+/* Indent second and sixth rows in bottom table (since there are no borders to get rid of, we don't have to put an extra cell in) */
+
+table:last-child tbody tr:nth-of-type(4n+2) th {
+  text-indent: 1.2rem;
+}

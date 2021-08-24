@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Contact page</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="contact_form_1.css">
+</head>
+<body>
+  <form action=# method="post">
+    <fieldset>
+      <dl>
+        <dt><label for="first_name">First name</label></dt>
+        <dd><input type="text" id="first_name" name="first_name" required></dd>
+
+        <dt><label for="last_name">Last name</label></dt>
+        <dd><input type="text" id="last_name" name="last_name" required></dd>
+
+        <dt><label for="email">Email</label></dt>
+        <dd><input type="email" id="email" name="email" placeholder="name@example.com" required></dd>
+
+        <dt><label for="city">City</label></dt>
+        <dd><input type="text" id="city" name="city" required></dd>
+
+        <dt><label for="state">City</label></dt>
+        <dd>
+          <select id="state" name="state">
+            <option>AK</option>
+            <option>AL</option>
+            <option>AR</option>
+            <option>AZ</option>
+            <option>CA</option>
+            <option>CO</option>
+            <option>CT</option>
+            <option>DC</option>
+            <option>DE</option>
+            <option>FL</option>
+            <option>GA</option>
+            <option>HI</option>
+            <option>IA</option>
+            <option>ID</option>
+            <option>IL</option>
+            <option>IN</option>
+            <option>KS</option>
+            <option>KY</option>
+            <option>LA</option>
+            <option>MA</option>
+            <option>MD</option>
+            <option>ME</option>
+            <option>MI</option>
+            <option>MN</option>
+            <option>MO</option>
+            <option>MS</option>
+            <option>MT</option>
+            <option>NC</option>
+            <option>ND</option>
+            <option>NE</option>
+            <option>NH</option>
+            <option>NJ</option>
+            <option>NM</option>
+            <option>NV</option>
+            <option>NY</option>
+            <option>OH</option>
+            <option>OK</option>
+            <option>OR</option>
+            <option>PA</option>
+            <option>RI</option>
+            <option>SC</option>
+            <option>SD</option>
+            <option>TN</option>
+            <option>TX</option>
+            <option>UT</option>
+            <option>VA</option>
+            <option>VT</option>
+            <option>WA</option>
+            <option>WI</option>
+            <option>WV</option>
+            <option>WY</option>
+          </select>
+        </dd>
+
+        <dt><label for="zipcode">Zipcode</label></dt>
+        <dd><input type="tel" id="zipcode" name="zipcode" placeholder="#####"
+                   pattern="[0-9]{5}" title="5 digits number" required></dd>
+
+        <dt><p>"Which of these colors do you like best?"</p></dt>
+        <dd>
+          <ul>
+            <li><label>
+              <input type="radio" name="color" value="red" checked>
+              Red
+            </label></li>
+
+            <li><label>
+              <input type="radio" name="color" value="orange">
+              Orange
+            </label></li>
+
+            <li><label>
+              <input type="radio" name="color" value="yellow">
+              Yellow
+            </label></li>
+
+            <li><label>
+              <input type="radio" name="color" value="green">
+              Green
+            </label></li>
+
+            <li><label>
+              <input type="radio" name="color" value="blue">
+              Blue
+            </label></li>
+
+            <li><label>
+              <input type="radio" name="color" value="indigo">
+              Indigo
+            </label></li>
+
+            <li><label>
+              <input type="radio" name="color" value="violet">
+              Violet
+            </label></li>
+          </ul>
+        </dd>
+
+      <dt><p>"Which web technologies do you want to learn?"</p></dt>
+        <dd> 
+          <label class="technology">
+            <input type="checkbox" name="technology" value="ruby">
+            Ruby
+          </label>
+          <label class="technology">
+            <input type="checkbox" name="technology" value="rails">
+            Rails
+          </label>
+          <label class="technology">
+            <input type="checkbox" name="technology" value="javascript">
+            Javascript
+          </label>
+          <label class="technology">
+            <input type="checkbox" name="technology" value="html">
+            HTML
+          </label>
+          <label class="technology">
+            <input type="checkbox" name="technology" value="css">
+            CSS
+          </label>
+          <label class="technology">
+            <input type="checkbox" name="technology" value="python">
+            Python
+          </label>
+        </dd>
+
+        <dt><label for="comment">Comments</label></dt>
+        <dd><textarea id="comment" name="comment" rows="6" cols="80"></textarea></dd>
+      </dl>
+
+      <input type="hidden" value="2021-04-22" name="timestamp">
+      <input type="submit" value="send">
+      <input type="reset">
+    </fieldset>
+  </form>
+</body>
+</html>
